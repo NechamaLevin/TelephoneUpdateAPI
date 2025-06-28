@@ -1,0 +1,90 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\\u05DE\u05E9\u05EA\u05DE\u05E9\\Desktop\\TelephoneUpdates.API\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{4B4B151E-2C43-4ECB-96F4-1667AA5CE683}|TelephoneUpdates.API.csproj|c:\\users\\\u05DE\u05E9\u05EA\u05DE\u05E9\\desktop\\telephoneupdates.api\\controllers\\incomingcallcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4B4B151E-2C43-4ECB-96F4-1667AA5CE683}|TelephoneUpdates.API.csproj|solutionrelative:controllers\\incomingcallcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4B4B151E-2C43-4ECB-96F4-1667AA5CE683}|TelephoneUpdates.API.csproj|c:\\users\\\u05DE\u05E9\u05EA\u05DE\u05E9\\desktop\\telephoneupdates.api\\datarepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4B4B151E-2C43-4ECB-96F4-1667AA5CE683}|TelephoneUpdates.API.csproj|solutionrelative:datarepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4B4B151E-2C43-4ECB-96F4-1667AA5CE683}|TelephoneUpdates.API.csproj|c:\\users\\\u05DE\u05E9\u05EA\u05DE\u05E9\\desktop\\telephoneupdates.api\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4B4B151E-2C43-4ECB-96F4-1667AA5CE683}|TelephoneUpdates.API.csproj|solutionrelative:controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4B4B151E-2C43-4ECB-96F4-1667AA5CE683}|TelephoneUpdates.API.csproj|c:\\users\\\u05DE\u05E9\u05EA\u05DE\u05E9\\desktop\\telephoneupdates.api\\telephoneupdates.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{4B4B151E-2C43-4ECB-96F4-1667AA5CE683}|TelephoneUpdates.API.csproj|solutionrelative:telephoneupdates.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 100,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "TelephoneUpdates.API.csproj",
+              "DocumentMoniker": "C:\\Users\\\u05DE\u05E9\u05EA\u05DE\u05E9\\Desktop\\TelephoneUpdates.API\\TelephoneUpdates.API.csproj",
+              "RelativeDocumentMoniker": "TelephoneUpdates.API.csproj",
+              "ToolTip": "C:\\Users\\\u05DE\u05E9\u05EA\u05DE\u05E9\\Desktop\\TelephoneUpdates.API\\TelephoneUpdates.API.csproj",
+              "RelativeToolTip": "TelephoneUpdates.API.csproj",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-06-16T14:15:04.544Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "IncomingCallController.cs",
+              "DocumentMoniker": "C:\\Users\\\u05DE\u05E9\u05EA\u05DE\u05E9\\Desktop\\TelephoneUpdates.API\\Controllers\\IncomingCallController.cs",
+              "RelativeDocumentMoniker": "Controllers\\IncomingCallController.cs",
+              "ToolTip": "C:\\Users\\\u05DE\u05E9\u05EA\u05DE\u05E9\\Desktop\\TelephoneUpdates.API\\Controllers\\IncomingCallController.cs",
+              "RelativeToolTip": "Controllers\\IncomingCallController.cs",
+              "ViewState": "AgIAAC8AAAAAAAAAAAAAAA0AAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-16T14:05:01.049Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DataRepository.cs",
+              "DocumentMoniker": "C:\\Users\\\u05DE\u05E9\u05EA\u05DE\u05E9\\Desktop\\TelephoneUpdates.API\\DataRepository.cs",
+              "RelativeDocumentMoniker": "DataRepository.cs",
+              "ToolTip": "C:\\Users\\\u05DE\u05E9\u05EA\u05DE\u05E9\\Desktop\\TelephoneUpdates.API\\DataRepository.cs",
+              "RelativeToolTip": "DataRepository.cs",
+              "ViewState": "AgIAADMAAAAAAAAAAAAlwEcAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-16T13:27:55.24Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "WeatherForecastController.cs",
+              "DocumentMoniker": "C:\\Users\\\u05DE\u05E9\u05EA\u05DE\u05E9\\Desktop\\TelephoneUpdates.API\\Controllers\\WeatherForecastController.cs",
+              "RelativeDocumentMoniker": "Controllers\\WeatherForecastController.cs",
+              "ToolTip": "C:\\Users\\\u05DE\u05E9\u05EA\u05DE\u05E9\\Desktop\\TelephoneUpdates.API\\Controllers\\WeatherForecastController.cs",
+              "RelativeToolTip": "Controllers\\WeatherForecastController.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAUwBYAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-16T13:18:33.664Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

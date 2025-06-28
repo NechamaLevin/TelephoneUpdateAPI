@@ -1,0 +1,55 @@
+[
+  {
+    "ContainingType": "TelephoneUpdates.API.Controllers.IncomingCallController",
+    "Method": "Test",
+    "RelativePath": "api/IncomingCall",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [],
+    "EndpointName": "Test"
+  },
+  {
+    "ContainingType": "TelephoneUpdates.API.Controllers.IncomingCallController",
+    "Method": "HandleCall",
+    "RelativePath": "api/IncomingCall/HandleCall",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ApiPhone",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "ApiCallId",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TelephoneUpdates.API.Controllers.WeatherForecastController",
+    "Method": "Get",
+    "RelativePath": "WeatherForecast",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[TelephoneUpdates.API.WeatherForecast, TelephoneUpdates.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ],
+    "EndpointName": "GetWeatherForecast"
+  }
+]
