@@ -1,7 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Reflection;
 using System.Text;
+using TelephoneUpdates.API;
+using TelephoneUpdates.API.Objects;
+using static System.Collections.Specialized.BitVector32;
 
 namespace TelephoneUpdates.API.Controllers
 {
@@ -10,75 +15,134 @@ namespace TelephoneUpdates.API.Controllers
     public class IncomingCallController : ControllerBase
     {
 
-        [HttpGet(Name = "Test")]
-        public async Task<IActionResult> Test()
-        {
-
-            var dataRepository = new DataRepository();
-            var result = await dataRepository.GetContactByPhoneNumber("0543201060");
-            return Ok(result);
-        }
-
+        #region IdentifyContact
         [HttpGet("HandleCall")]
         public async Task<IActionResult> HandleCall(
-        [FromQuery] string ApiPhone,
-        [FromQuery(Name = "ApiCallId")] string callId)
+       [FromQuery(Name = "ApiPhone")] string phoneNumber,
+       [FromQuery(Name = "ApiCallId")] string callId)
         {
-            var attendance = Request.Query["Attendance"].ToString();
-
-            // בדיקה אם הגיע מספר טלפון
-            if (string.IsNullOrWhiteSpace(ApiPhone))
+            if (string.IsNullOrWhiteSpace(phoneNumber))
             {
                 return BadRequest(new { error = "Missing phone number" });
             }
 
             var dataRepository = new DataRepository();
-
-            // שליפת פרטי החונך לפי מספר הטלפון
-            var result = await dataRepository.GetContactByPhoneNumber(ApiPhone);
-            var parseResult = JObject.Parse(result);
-
-            // בדיקת זיהוי המספר
-            if (parseResult["data"] == null)
+            var session = await dataRepository.GetCallSession(callID: callId, phoneNumber: phoneNumber);
+            if (session.ContactIdentifiedStatus == CallSession.ContactIdentifiedStatusOptions.NotIdentifyed)
             {
-                return Content("id_list_message=t-המספר שלך לא מזוהה במערכת, נא לפנות למשרד.");
+                return Content("id_list_message=t-המיספר שלך לא מזוהה במערכת, נא לפנות לרכז הסניף.");
+                // פה תיהיה פונקציה לבדיקה לפי תעודת זהות
+            }
+            var fullName = session.Contact?.FullName ?? "";
+
+
+            //העברה לשלוחה שקוראת לפונקציית דיווח
+            var message = $"שלום הרב {fullName},הינך מועבר לדיווח נוכחות";
+            var responseText = $"id_list_message=t-{message}.g-1";
+            return Content(responseText, "text/plain", Encoding.UTF8);
+            // פונקציה לזיהוי לפי תעודת זהות + קוד אישי אולי לשאול את גלסנר
+
+        }
+        #endregion
+
+        #region ReportAttendance
+
+        [HttpGet("ReportAttendance")]
+        public async Task<IActionResult> ReportAttendance(
+            [FromQuery(Name = "ApiPhone")] string phoneNumber,
+            [FromQuery(Name = "ApiCallId")] string callId)
+        {
+            var dataRepository = new DataRepository();
+            DateTime dateInstance = DateTime.Today;
+            var session = await dataRepository.GetCallSession(callID: callId, phoneNumber: phoneNumber);
+            var teacherId = session.Contact.Id;
+
+            var jArrayStudents = await dataRepository.GetPrivateLessonsInstances(teacherId, dateInstance);
+            session.Students = jArrayStudents.ToObject<List<JObject>>();
+
+            if (session.Students == null || session.Students.Count == 0)
+            {
+                var context = $"id_list_message=t-אין לך שיבוצים מעודכנים ליום זה. שלום ותודה!&go_to_folder=hangup";
+                return Content(context, "text/plain", Encoding.UTF8);
             }
 
-            // שמירת זיהוי המשתמש ב-Cache
-            dataRepository.AddContactToCall(callId, parseResult);
+            var attendance = Request.Query["Attendance"].LastOrDefault()?.ToString();
 
-            var fullName = parseResult["data"]?[0]?["id"]?.ToString();
-            var studentName = "משה כהן";
-
-            // ============================
-            // שלב 1: אם זו קריאה שניה ויש Attendance → מתייחסים לתשובה
-            // ============================
+            // אם יש תשובה - נשמור אותה ואז נתקדם
             if (!string.IsNullOrEmpty(attendance))
             {
+                string comment = "";
+
                 switch (attendance)
                 {
                     case "1":
-                        // עדכון במסד נתונים: השיעור התקיים
-                        return Content("id_list_message=t-תודה רבה, נרשם שהשיעור התקיים.");
+                        comment = "נרשם כי הישעור התקיים בזמן";
+                        break;
                     case "2":
-                        return Content("id_list_message=t-נרשם שהשיעור לא התקיים.");
+                        comment = "נרשם כי השיעור התקיים באיחור";
+                        break;
                     case "3":
-                        return Content("id_list_message=t-נרשם שהשיעור התקיים באיחור.");
+                        comment = "נרשם כי השיעור לא התקיים";
+                        break;
+                    case "4":
+                        comment = "נרשם כי התלמיד לא הגיע";
+                        break;
                     default:
-                        return Content("id_list_message=t-בחירה לא תקינה, נא נסה שוב.");
+                        return Content("id_list_message=t-בחירה לא תקינה, נא נסה שוב");
                 }
-            }
-     
 
-                // ============================
-                // שלב 2: אם זו קריאה ראשונה → מחזירים לימות שאלה עם read
-                // ============================
-                var message = $"שלום הרב {fullName}, האם התקיים היום שיעור עם {studentName}? השיעור התקיים הקש 1, השיעור לא התקיים הקש 2, השיעור התקיים באיחור הקש 3";
+                // כאן עדכון במסד נתונים למשל:
+                // dataRepository.UpdateAttendanceInDatabase(...);
+
+                // מקדמים את האינדקס
+                session.CurrentIndex++;
+            }
+
+            // קפיצה על שיעורים קבוצתיים
+            while (session.CurrentIndex < session.Students.Count)
+            {
+                var currentStudent = session.Students[session.CurrentIndex];
+                bool isGroupLesson = false;
+
+                var token = currentStudent["isAGroupLesson"];
+                if (token?.Type == JTokenType.Boolean)
+                    isGroupLesson = token.Value<bool>();
+
+                if (isGroupLesson)
+                {
+                    // סימון שצריך לדווח על קבוצתי בסוף (אם צריך)
+                    session.HasGroupLesson = true; // תוודאי שזה קיים לך ב-Session
+                    session.CurrentIndex++;
+                    continue;
+                }
+
+                // הגעת לתלמיד פרטני
+                var studentName = currentStudent["studentName"];
+                var message = $"האם התקיים היום שיעור עם {studentName}? השיעור התקיים הקש 1, לא התקיים הקש 2, התקיים באיחור הקש 3";
                 var responseText = $"read=t-{message}=Attendance,,1,1,,No,,,,1.2.3,,,,yes";
 
+                dataRepository.SaveCallSession(callId, session);
+                return Content(responseText, "text/plain", Encoding.UTF8);
+            }
 
-            return Content(responseText, "text/plain", Encoding.UTF8);
+            // אם סיימת את כל התלמידים
+            if (session.HasGroupLesson)
+            {
+                // בסוף תשאלי על הקבוצתי
+                //var groupMessage = "בוצעו כל הדיווחים הפרטניים. האם התקיים היום השיעור הקבוצתי? הקש 1 אם כן, הקש 2 אם לא.";
+                //var responseTextGroup = $"read=t-{groupMessage}=Attendance,,1,1,,No,,,,1.2.3,,,,yes";
+                var message = $"?האם התקיים היום השיעור הקבוצתי";
+                var responseText = $"read=t-{message}=Attendance,,1,1,,No,,,,1.2.3,,,,yes";
+
+                session.HasGroupLesson = false; // אם את רוצה לנקות
+                dataRepository.SaveCallSession(callId, session);
+
+                return Content(responseText, "text/plain", Encoding.UTF8);
+            }
+
+            return Content($"id_list_message=t-תודה רבה! סיימת את כל הדיווחים &go_to_folder=hangup", "text/plain", Encoding.UTF8);
         }
+        #endregion
+
     }
 }
-             

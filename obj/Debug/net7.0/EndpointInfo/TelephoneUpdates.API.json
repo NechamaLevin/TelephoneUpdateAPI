@@ -5,12 +5,29 @@
     "version": "1.0"
   },
   "paths": {
-    "/api/IncomingCall": {
+    "/api/IncomingCall/HandleCall": {
       "get": {
         "tags": [
           "IncomingCall"
         ],
-        "operationId": "Test",
+        "parameters": [
+          {
+            "name": "ApiPhone",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ApiCallId",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success"
@@ -18,7 +35,7 @@
         }
       }
     },
-    "/api/IncomingCall/HandleCall": {
+    "/api/IncomingCall/ReportAttendance": {
       "get": {
         "tags": [
           "IncomingCall"

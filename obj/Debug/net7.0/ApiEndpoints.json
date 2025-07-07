@@ -1,19 +1,29 @@
 [
   {
     "ContainingType": "TelephoneUpdates.API.Controllers.IncomingCallController",
-    "Method": "Test",
-    "RelativePath": "api/IncomingCall",
+    "Method": "HandleCall",
+    "RelativePath": "api/IncomingCall/HandleCall",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [],
-    "EndpointName": "Test"
+    "Parameters": [
+      {
+        "Name": "ApiPhone",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "ApiCallId",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "TelephoneUpdates.API.Controllers.IncomingCallController",
-    "Method": "HandleCall",
-    "RelativePath": "api/IncomingCall/HandleCall",
+    "Method": "ReportAttendance",
+    "RelativePath": "api/IncomingCall/ReportAttendance",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
