@@ -51,28 +51,39 @@ namespace TelephoneUpdates.API
             var result = (JObject)System.Runtime.Caching.MemoryCache.Default.Get($"{Cache_CallIDToContactPrefix}{callID}");
             return result;
         }
-        public async Task<CallSession> GetCallSession(string callID, string phoneNumber)
+        public async Task<CallSession> GetCallSession(string callID, string phoneNumber, string Tzman)
         {
             var session = (CallSession)System.Runtime.Caching.MemoryCache.Default
                 .Get($"{Cache_CallIDToContactPrefix}{callID}");
-            if (session == null)
+            if (session == null || session.Contact == null)
             {
-                session = await CreateNewCallSession(callID:callID,phoneNumber:phoneNumber);
+                session = await CreateNewCallSession(callID:callID,phoneNumber:phoneNumber, Tzman: Tzman);
+                SaveCallSession(callID, session);
+
             }
             return session;
         }
         #endregion
 
         #region CreateNewCallSession
-        private async Task<CallSession> CreateNewCallSession(string callID, string phoneNumber)
+        private async Task<CallSession> CreateNewCallSession(string callID, string phoneNumber, string Tzman)
         {
             var session = new CallSession
             {
                 CallID = callID,
                 ContactPhoneNumber = phoneNumber
             };
-            var contact = await this.GetContactByPhoneNumber(phoneNumber);
+            if(Tzman != null)
+            {
+                var contact = await this.GetContactByTz(Tzman);
                 session.Contact = contact;
+            }
+            else
+            {
+                var contact = await this.GetContactByPhoneNumber(phoneNumber);
+                session.Contact = contact;
+            }
+                
             return session;
 
         }
@@ -148,6 +159,43 @@ namespace TelephoneUpdates.API
             return null;
         }
 
+        /// <summary>
+        /// מחזיר איש קשר לפי מספר תעודת זהות
+        /// </summary>
+        /// <param name="Tz">תעודת זהות על פיו מחפשים את איש הקשר </param>
+        /// <returns></returns>
+        public async Task<Contact> GetContactByTz(string Tz)
+        {
+            var viewStructureJson = await GetViewStructure(contextKey: "GlobalOptimum_Contacts_All");
+            // עריכת הג'ייסון כך שיכיל סינון מתאים
+            var viewStructure = JObject.Parse(viewStructureJson);
+
+
+            viewStructure["pullSpecificColumns"] = new JArray() { "id", "fullName", "firstName", "lastName" };
+            viewStructure["clientID"] = "b60e84fd-024b-4679-8eb7-d3a05c1345f9";
+            // נוסיף סינון של תעודת זהות
+            var filterByTz = new FilterUnit(key: "idMan", value: Tz);
+            var filterByCategory = new FilterUnit(key: "extensionColumn_Contacts_ExtensionColumnsParameterIDCategory_KeyWord", value: "Contacts_ExtensionColumnsCategoryTutor");
+            var filterToken = new JArray();
+            DefaultContractResolver contractResolver = new()
+            {
+                NamingStrategy = new CamelCaseNamingStrategy()
+            };
+            filterToken.Add(JObject.FromObject(filterByTz, new Newtonsoft.Json.JsonSerializer { ContractResolver = contractResolver }));
+            filterToken.Add(JObject.FromObject(filterByCategory, new Newtonsoft.Json.JsonSerializer { ContractResolver = contractResolver }));
+            viewStructure.Add("userSelectedListBuilderCommands", filterToken);
+            var serverResult = await GetViaPostByViewStructureAsJson(viewStructure.ToString());
+            var parsedServerResut = JObject.Parse(serverResult);
+            var data = JArray.Parse(parsedServerResut["data"].ToString());
+            // אובייקט קונטקט מפורסר
+            if (data.Count == 1)
+            {
+                var contact = data.First().ToObject<Contact>();
+                return contact;
+            }
+
+            return null;
+        }
         /// <summary>
         /// מחזיר איש קשר - חונך בדרך כלל
         /// על פי מספר טלפון
